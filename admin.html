@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Mugen: Admin Panel</title>
+  <style>
+    body { font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif; background-color: #1a1a1a; color: white; margin: 0; padding: 20px; display: flex; flex-direction: column; align-items: center; text-align: center; }
+    .card { background: #666666; padding: 30px; border-radius: 8px; width: 90%; max-width: 650px; box-shadow: 0 4px 12px rgba(0,0,0,0.3); box-sizing: border-box; }
+    input, select, button { display: block; width: 100%; margin: 10px 0; padding: 10px; box-sizing: border-box; }
+    button { background-color: white; border: none; font-weight: bold; cursor: pointer; }
+  </style>
+</head>
+<body>
+
+  <h1>MUGEN ADMIN PANEL</h1>
+
+  <div class="card">
+    <h2>Add/Update Team Quota</h2>
+    <form id="add-team-form">
+     <select id="team">
+        <option value="MUGEN CAELITH SLAYERS">MUGEN CAELITH SLAYERS</option>
+        <option value="MUGEN EL HOMBRE">MUGEN EL HOMBRE</option>
+        <option value="MUGEN GULDATHINGS">MUGEN GULDATHINGS</option>
+        <option value="MUGEN KISHIN">MUGEN KISHIN</option>
+        <option value="MUGEN NEW ERA">MUGEN NEW ERA</option>
+        <option value="MUGEN TEAM LEGACY MAIN">MUGEN TEAM LEGACY MAIN</option>
+        <option value="MUGEN TEAM LEGACY 2.0">MUGEN TEAM LEGACY 2.0</option>
+        <option value="MUGEN VARPEX CILLAGON">MUGEN VARPEX CILLAGON</option>
+        <option value="MUGEN YAKUZA RANCOR">MUGEN YAKUZA RANCOR</option>
+     </select>
+      <input type="number" id="rg-grind" placeholder="RG Grind pts" required>
+      <input type="number" id="scrims" placeholder="Scrim pts" required>
+      <input type="number" id="home-st" placeholder="Home ST pts" required>
+      <input type="number" id="outside" placeholder="Outside ST pts" required>
+      <input type="number" id="plus-pts" placeholder="+pts (Optional)">
+      <button type="submit">Submit</button>
+    </form>
+  </div>
+
+  <script type="module" src="app.js"></script>
+</body>
+</html>

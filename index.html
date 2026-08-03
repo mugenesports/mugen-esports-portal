@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Mugen Esports</title>
+  <style>
+    body { font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif; background-color: #1a1a1a; color: white; margin: 20px; }
+    h1, h2 { color: #d4d4d4; }
+    table { width: 100%; border-collapse: collapse; margin-top: 15px; }
+    th, td { border: 1px solid #666666; padding: 10px; text-align: center; }
+    th { background-color: #666666; }
+    .card { background: #353535; padding: 15px; border-radius: 8px; margin-bottom: 20px; }
+  </style>
+</head>
+<body>
+
+  <h1>MUGEN ESPORTS DASHBOARD</h1>
+
+  <!-- Announcements Section -->
+  <div class="card">
+    <h2>📢 Announcements</h2>
+    <p id="announcement-text">Loading announcements...</p>
+  </div>
+
+  <!-- Player Quota & Leaderboard -->
+  <div class="card">
+    <h2>🏆 Mugen Esports Weekly Leaderboard</h2>
+    <table>
+      <thead>
+        <tr>
+          <th>Team Version</th>
+          <th>RG Grind</th>
+          <th>Scrims</th>
+          <th>Home ST</th>
+          <th>Outside ST</th>
+          <th>+pts</th>
+        </tr>
+      </thead>
+      <tbody id="player-list">
+        <!-- Dynamically populated via JavaScript -->
+      </tbody>
+    </table>
+  </div>
+
+  <script type="module" src="app.js"></script>
+</body>
+</html>
