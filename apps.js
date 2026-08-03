@@ -1,7 +1,19 @@
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
-import { getFirestore, collection, addDoc, onSnapshot } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+import { 
+  getFirestore, 
+  collection, 
+  addDoc, 
+  setDoc,
+  doc,
+  onSnapshot 
+} from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+import { 
+  getAuth, 
+  createUserWithEmailAndPassword, 
+  signInWithEmailAndPassword 
+} from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
 
-// 1. Firebase Configuration
+// 1. Firebase Configuration (Ensure your keys are pasted here)
 const firebaseConfig = {
   apiKey: "YOUR_API_KEY",
   authDomain: "YOUR_PROJECT.firebaseapp.com",
@@ -11,24 +23,22 @@ const firebaseConfig = {
   appId: "YOUR_APP_ID"
 };
 
-// 2. Initialize Firebase & Firestore
+// 2. Initialize Services
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
+const auth = getAuth(app);
 
-// Reference to "teams" collection in Firestore
+// References
 const teamsRef = collection(db, "teams");
-
-// 3. READ DATA (For index.html)
-// FIXED: ID updated from 'team-list' to 'player-list' to match index.html
 const teamsList = document.getElementById("player-list");
 
-// 4. CONNECT HTML FORM EVENTS
+// 3. EVENT LISTENERS
 document.addEventListener("DOMContentLoaded", () => {
   
+  // --- A. LEADERBOARD REAL-TIME READ (index.html) ---
   if (teamsList) {
-    // Real-time updates whenever data changes in the database
     onSnapshot(teamsRef, (snapshot) => {
-      teamsList.innerHTML = ""; // Clear existing table rows
+      teamsList.innerHTML = "";
       snapshot.forEach((doc) => {
         const data = doc.data();
         const row = `
@@ -46,9 +56,8 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   }
 
-  // 5. WRITE DATA (For admin.html)
+  // --- B. ADMIN FORM WRITE (admin.html) ---
   const addTeamForm = document.getElementById("add-team-form");
-
   if (addTeamForm) {
     addTeamForm.addEventListener("submit", async (e) => {
       e.preventDefault();
@@ -57,12 +66,10 @@ document.addEventListener("DOMContentLoaded", () => {
       const rgGrind = parseInt(document.getElementById("rg-grind").value) || 0;
       const scrims = parseInt(document.getElementById("scrims").value) || 0;
       const homeSt = parseInt(document.getElementById("home-st").value) || 0;
-      // FIXED: Matches 'outside-st' ID from admin.html
       const outsideSt = parseInt(document.getElementById("outside-st").value) || 0; 
       const plusPts = parseInt(document.getElementById("plus-pts").value) || 0;
 
       try {
-        // FIXED: Changed 'teamRef' to 'teamsRef'
         await addDoc(teamsRef, { 
           team,
           rgGrind,
@@ -78,6 +85,69 @@ document.addEventListener("DOMContentLoaded", () => {
       } catch (error) {
         console.error("Error adding document: ", error);
         alert("Error saving stats: " + error.message);
+      }
+    });
+  }
+
+  // --- C. PLAYER REGISTRATION (login.html) ---
+  const registerForm = document.getElementById("form-register");
+  if (registerForm) {
+    registerForm.addEventListener("submit", async (e) => {
+      e.preventDefault();
+
+      const email = document.getElementById("reg-email").value;
+      const password = document.getElementById("reg-password").value;
+      const team = document.getElementById("team").value;
+      const fullName = document.getElementById("reg-name").value;
+      const ign = document.getElementById("ign").value;
+      const mlId = document.getElementById("id").value;
+      const server = document.getElementById("server").value;
+      const bdate = document.getElementById("bdate").value;
+      const location = document.getElementById("location").value;
+
+      try {
+        // 1. Create Auth Account
+        const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+        const user = userCredential.user;
+
+        // 2. Save Profile Details to "users" collection
+        await setDoc(doc(db, "users", user.uid), {
+          fullName,
+          ign,
+          mlId,
+          server,
+          team,
+          bdate,
+          location,
+          email,
+          createdAt: new Date()
+        });
+
+        alert("Registration successful! Welcome to Mugen Esports.");
+        window.location.href = "index.html"; // Redirect to dashboard
+      } catch (error) {
+        console.error("Registration error:", error);
+        alert("Registration failed: " + error.message);
+      }
+    });
+  }
+
+  // --- D. PLAYER LOGIN (login.html) ---
+  const loginForm = document.getElementById("form-login");
+  if (loginForm) {
+    loginForm.addEventListener("submit", async (e) => {
+      e.preventDefault();
+
+      const email = document.getElementById("login-email").value;
+      const password = document.getElementById("login-password").value;
+
+      try {
+        await signInWithEmailAndPassword(auth, email, password);
+        alert("Logged in successfully!");
+        window.location.href = "index.html"; // Redirect to dashboard
+      } catch (error) {
+        console.error("Login error:", error);
+        alert("Login failed: " + error.message);
       }
     });
   }
